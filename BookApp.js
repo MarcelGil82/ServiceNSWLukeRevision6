@@ -111,14 +111,49 @@ let authors = [
 // Q5. Create a function called searchBooks which takes a string which is a search term as an argument. 
 // The function should return all books where the title or author name contains the given string. 
 
-function searchBooks() {
-    function findBookString(element) {
-        if (element[0] == "") {
-            return books || authorId
-                .includes(findBookString)
+// Wrong
+// function searchBooks() {
+//     function findBookString(element) {
+//         if (element[0] == "") {
+//             return books || authorId
+//                 .includes(findBookString)
+//         }
+//     }
+// }
+// // let searchTerm = searchBooks("and the");
+// let searchTerm = searchBooks("tolkien");
+// console.log(searchTerm)
+
+// Lukes Answer
+
+function searchBooks(searchTerm) {
+    function termAppearsInBooksOrAuthor(book) {
+        let lowerSearchTerm = searchTerm.toLowerCase();
+
+        let author = getAuthor(book.authorId);
+        return book.title.toLowerCase().includes(lowerSearchTerm) ||
+            author.firstName.toLowerCase().includes(lowerSearchTerm) ||
+            author.lastName.toLowerCase().includes(lowerSearchTerm);
+
+    }
+
+    return books.filter(termAppearsInBooksOrAuthor);
+}
+
+function sortBooks(sortField) {
+    function sortByField(book1, book2) {
+        if (book1[sortField] > book2[sortField]) {
+            return 1;
+        } else if (book1[sortField] < book2[sortField]) {
+            return -1;
+        } else {
+            return 0;
         }
     }
+
+    return books
+        .sort(sortByField)
+        .map(book => book.title);
 }
-    // let searchTerm = searchBooks("and the");
-    let searchTerm = searchBooks("tolkien");
-    console.log(searchTerm)
+
+console.log(searchBooks("otte"));
